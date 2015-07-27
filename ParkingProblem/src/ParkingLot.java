@@ -23,4 +23,12 @@ public class ParkingLot {
         parkingSpace.put(token, car);
         return token++;
     }
+
+    public Car unPark(int token) {
+
+        if(!parkingSpace.containsKey(token))
+            throw new CarNotParkedException();
+        return parkingSpace.remove(token);
+
+    }
 }
