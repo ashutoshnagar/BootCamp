@@ -21,5 +21,14 @@ public class ParkingLotTest {
         assertEquals(3, parkingLot.park(new Car(1214)));
     }
 
+    @org.junit.Test(expected = CarAlreadyParkedException.class)
+    public void testParkWithCarAlreadyParkedException() throws Exception {
+
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.park(new Car(1212));
+        assertEquals(2, parkingLot.park(new Car(1212)));
+
+    }
+
 
 }

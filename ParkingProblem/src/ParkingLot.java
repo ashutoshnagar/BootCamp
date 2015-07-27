@@ -15,6 +15,8 @@ public class ParkingLot {
 
     public int park(Car car) {
 
+        if(parkingSpace.containsValue(car))
+            throw new CarAlreadyParkedException();
         if (parkingSpace.size() == CAPACITY)
             throw new ParkingFullException();
 
