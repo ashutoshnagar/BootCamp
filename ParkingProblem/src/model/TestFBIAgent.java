@@ -2,12 +2,9 @@ package model;
 
 import model.FBIAgent;
 
-public class TestFBIAgent extends FBIAgent {
-public    boolean full=false;
-    public TestFBIAgent(int no){
-        super(no);
+public class TestFBIAgent implements ParkingLotObserver {
+    public    boolean full=false;
 
-    }
     @Override
     public void onFull() {
         full=true;

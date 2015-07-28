@@ -12,20 +12,19 @@ public class ParkingLot {
     private int token;
     private Map<Integer, Car> parkingSpace = new HashMap<Integer, Car>();
     private int CAPACITY = 2;
-    private ParkingLotObserver owner;
     private List<ParkingLotObserver> observers;
 
     public ParkingLot() {
     }
 
-    public ParkingLot(ParkingLotOwner owner) {
+    public ParkingLot(TestParkingLotOwner owner) {
         this.observers = new ArrayList<ParkingLotObserver>();
         observers.add(owner);
     }
 
     public ParkingLot(ParkingLotOwner owner, int capacity) {
         this.CAPACITY = capacity;
-        this.owner = owner;
+       observers.add(owner);
     }
 
     public int park(Car car) {
@@ -37,9 +36,9 @@ public class ParkingLot {
 
         parkingSpace.put(++token, car);
         if (isParkingFull()) {
-            owner.onFull();
-            for (ParkingLotObserver agent : observers)
-                agent.onFull();
+
+            for (ParkingLotObserver observer : observers)
+                observer.onFull();
 
         }
         return token;
@@ -50,9 +49,8 @@ public class ParkingLot {
         if (!parkingSpace.containsKey(token))
             throw new CarNotParkedException();
         if (isParkingFull()) {
-            owner.onVacancy();
-            for (ParkingLotObserver agent : observers)
-                agent.onVacancy();
+            for (ParkingLotObserver observer : observers)
+                observer.onVacancy();
 
         }
         return parkingSpace.remove(token);
@@ -62,6 +60,8 @@ public class ParkingLot {
     public boolean isParkingFull() {
         return parkingSpace.size() == CAPACITY;
     }
+
+
 
     public void register(ParkingLotObserver agent) {
         observers.add(agent);

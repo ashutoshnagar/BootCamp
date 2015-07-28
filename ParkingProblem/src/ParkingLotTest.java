@@ -74,9 +74,9 @@ public class ParkingLotTest {
 
 
     {
-        TestFBIAgent agent1 = new TestFBIAgent(1);
-        TestFBIAgent agent2 = new TestFBIAgent(2);
-        TestFBIAgent agent3 = new TestFBIAgent(3);
+        TestFBIAgent agent1 = new TestFBIAgent();
+        TestFBIAgent agent2 = new TestFBIAgent();
+        TestFBIAgent agent3 = new TestFBIAgent();
 
         parkingLot.register(agent1);
         parkingLot.register(agent2);
@@ -93,9 +93,9 @@ public class ParkingLotTest {
     public void testFBIAgentNotifiedOnNoMoreParkingFull()
 
     {
-        TestFBIAgent agent1 = new TestFBIAgent(1);
-        TestFBIAgent agent2 = new TestFBIAgent(2);
-        TestFBIAgent agent3 = new TestFBIAgent(3);
+        TestFBIAgent agent1 = new TestFBIAgent();
+        TestFBIAgent agent2 = new TestFBIAgent();
+        TestFBIAgent agent3 = new TestFBIAgent();
 
         parkingLot.register(agent1);
         parkingLot.register(agent2);
