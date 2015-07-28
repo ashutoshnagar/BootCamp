@@ -37,8 +37,7 @@ public class ParkingLot {
         parkingSpace.put(++token, car);
         if (isParkingFull()) {
 
-            for (ParkingLotObserver observer : observers)
-                observer.onFull();
+           notifyObservers(1);
 
         }
         return token;
@@ -49,8 +48,7 @@ public class ParkingLot {
         if (!parkingSpace.containsKey(token))
             throw new CarNotParkedException();
         if (isParkingFull()) {
-            for (ParkingLotObserver observer : observers)
-                observer.onVacancy();
+            notifyObservers(2);
 
         }
         return parkingSpace.remove(token);
@@ -61,7 +59,21 @@ public class ParkingLot {
         return parkingSpace.size() == CAPACITY;
     }
 
+    private void notifyObservers(int code){
+        switch (code)
+        {
+            case 1:
+                for(ParkingLotObserver observer:observers)
+                    observer.onFull();
+                    break;
+            case 2:
+                for(ParkingLotObserver observer:observers)
+                    observer.onVacancy();
+                    break;
+            default:break;
 
+        }
+    }
 
     public void register(ParkingLotObserver agent) {
         observers.add(agent);
