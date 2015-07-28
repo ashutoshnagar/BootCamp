@@ -1,3 +1,7 @@
+import exceptions.CarAlreadyParkedException;
+import exceptions.CarNotParkedException;
+import exceptions.ParkingFullException;
+import model.*;
 import org.junit.Before;
 
 import static org.junit.Assert.*;
@@ -7,24 +11,17 @@ public class ParkingLotTest {
 
     private ParkingLot parkingLot;
     private TestParkingLotOwner testParkingLotOwner;
-    private TestFBIAgent agent1;
-    private TestFBIAgent agent2;
-    private TestFBIAgent agent3;
+
 
     @Before
-    public void setUp()
-    {
-        testParkingLotOwner =new TestParkingLotOwner();
-         agent1=new TestFBIAgent(1);
-         agent2=new TestFBIAgent(2);
-         agent3=new TestFBIAgent(3);
+    public void setUp() {
+        testParkingLotOwner = new TestParkingLotOwner();
+        parkingLot = new ParkingLot(testParkingLotOwner);
 
-        parkingLot=new ParkingLot(testParkingLotOwner);
-        parkingLot.register(agent1);
-        parkingLot.register(agent3);
         parkingLot.park(new Car(1212));
 
     }
+
     @org.junit.Test
     public void testParkWithSpace() throws Exception {
         assertEquals(2, parkingLot.park(new Car(1213)));
@@ -42,7 +39,7 @@ public class ParkingLotTest {
     @org.junit.Test(expected = CarAlreadyParkedException.class)
     public void testParkWithCarAlreadyParkedException() throws Exception {
 
-         parkingLot.park(new Car(1212));
+        parkingLot.park(new Car(1212));
 
     }
 
@@ -59,16 +56,15 @@ public class ParkingLotTest {
 
 
     @org.junit.Test
-    public void testOwnerNotifiedOnParkingFull(){
+    public void testOwnerNotifiedOnParkingFull() {
         parkingLot.park(new Car(1213));
         assertEquals(true, testParkingLotOwner.full);
     }
 
 
     @org.junit.Test
-    public void testOwnerNotifiedOnParkingNoMoreFull(){
+    public void testOwnerNotifiedOnParkingNoMoreFull() {
         parkingLot.park(new Car(1213));
-        parkingLot.unPark(2);
         parkingLot.unPark(1);
         assertEquals(false, testParkingLotOwner.full);
     }
@@ -76,21 +72,19 @@ public class ParkingLotTest {
     @org.junit.Test
     public void testFBIAgentNotifiedOnParkingFull()
 
-    {parkingLot.park(new Car(1213));
 
-        assertEquals(true, agent1.full);
-        assertEquals(true, agent3.full);
-    }
+    {
+        TestFBIAgent agent1 = new TestFBIAgent(1);
+        TestFBIAgent agent2 = new TestFBIAgent(2);
+        TestFBIAgent agent3 = new TestFBIAgent(3);
 
-    @org.junit.Test
-    public void testFBIAgentNotifiedOnParkingFullAfterUnregisteringAgent()
-
-    {   parkingLot.unRegister(agent3);
+        parkingLot.register(agent1);
         parkingLot.register(agent2);
         parkingLot.park(new Car(1213));
 
+        assertEquals(true,testParkingLotOwner.full);
         assertEquals(true, agent1.full);
-        assertEquals(true,agent2.full);
+        assertEquals(true, agent2.full);
         assertEquals(false, agent3.full);
     }
 
@@ -98,20 +92,23 @@ public class ParkingLotTest {
     @org.junit.Test
     public void testFBIAgentNotifiedOnNoMoreParkingFull()
 
-    {   parkingLot.park(new Car(1213));
-        parkingLot.unPark(2);
-        assertEquals(false, agent1.full);
-        assertEquals(false, agent3.full);
-    }
-    @org.junit.Test
-    public void testFBIAgentNotifiedOnNoMoreParkingFullAfterUnregisteringAgent()
+    {
+        TestFBIAgent agent1 = new TestFBIAgent(1);
+        TestFBIAgent agent2 = new TestFBIAgent(2);
+        TestFBIAgent agent3 = new TestFBIAgent(3);
 
-    {   parkingLot.unRegister(agent3);
+        parkingLot.register(agent1);
         parkingLot.register(agent2);
-        parkingLot.park(new Car( 1213));
-        parkingLot.unPark(1);
+        parkingLot.register(agent3);
+
+
+        parkingLot.park(new Car(1213));
+        parkingLot.unPark(2);
+
+        assertEquals(false, testParkingLotOwner.full);
         assertEquals(false, agent1.full);
-        assertEquals(false,agent2.full);
+        assertEquals(false, agent2.full);
+        assertEquals(false, agent3.full);
     }
 
 

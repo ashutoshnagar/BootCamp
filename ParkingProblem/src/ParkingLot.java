@@ -1,3 +1,8 @@
+import exceptions.CarAlreadyParkedException;
+import exceptions.CarNotParkedException;
+import exceptions.ParkingFullException;
+import model.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,14 +13,14 @@ public class ParkingLot {
     private Map<Integer, Car> parkingSpace = new HashMap<Integer, Car>();
     private int CAPACITY = 2;
     private ParkingLotObserver owner;
-    private List<ParkingLotObserver> agents;
+    private List<ParkingLotObserver> observers;
 
     public ParkingLot() {
     }
 
     public ParkingLot(ParkingLotOwner owner) {
-        this.agents = new ArrayList<ParkingLotObserver>();
-        this.owner = owner;
+        this.observers = new ArrayList<ParkingLotObserver>();
+        observers.add(owner);
     }
 
     public ParkingLot(ParkingLotOwner owner, int capacity) {
@@ -33,7 +38,7 @@ public class ParkingLot {
         parkingSpace.put(++token, car);
         if (isParkingFull()) {
             owner.onFull();
-            for (ParkingLotObserver agent : agents)
+            for (ParkingLotObserver agent : observers)
                 agent.onFull();
 
         }
@@ -45,9 +50,9 @@ public class ParkingLot {
         if (!parkingSpace.containsKey(token))
             throw new CarNotParkedException();
         if (isParkingFull()) {
-            owner.onNoMoreFull();
-            for (ParkingLotObserver agent : agents)
-                agent.onNoMoreFull();
+            owner.onVacancy();
+            for (ParkingLotObserver agent : observers)
+                agent.onVacancy();
 
         }
         return parkingSpace.remove(token);
@@ -59,11 +64,10 @@ public class ParkingLot {
     }
 
     public void register(ParkingLotObserver agent) {
-        agents.add(agent);
+        observers.add(agent);
     }
 
     public void unRegister(ParkingLotObserver agent) {
-        agent.onNoMoreFull();
-        agents.remove(agent);
+        observers.remove(agent);
     }
 }
